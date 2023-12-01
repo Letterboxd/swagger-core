@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.callbacks.Callback;
 import io.swagger.v3.oas.models.examples.Example;
 import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.links.Link;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.parameters.RequestBody;
@@ -68,7 +69,14 @@ public class Components {
         if (this.schemas == null) {
             this.schemas = new LinkedHashMap<>();
         }
-        this.schemas.put(key, schemasItem);
+        final Schema existing = this.schemas.get(key);
+        if (existing != null) {
+            if (schemasItem instanceof ComposedSchema) {
+                this.schemas.put(key, schemasItem);
+            }
+        } else {
+            this.schemas.put(key, schemasItem);
+        }
         return this;
     }
 
